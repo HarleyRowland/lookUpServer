@@ -1,23 +1,28 @@
 var express = require('express')
 var app = express()
 
-// var getNameController = require('./controllers/getNameController');
+var algoController = require('./controllers/algoController');
+var databaseController = require('./controllers/databaseController');
+
 
 app.get('/', function(request, response){
   response.send("LookUp Server.");
 });
 
-app.post('/location', function(request, response){
-  console.log(request.query)
-  if(request && request.query && request.query.gps) {
-    response.send("Your gps location is " + request.query.gps + ".");
+app.post('/startAlgo', function(request, response){
+  if(request && request.query && request.query.token) {
+    algoController(request, response);
   } else {
-    response.send("I don't know where you are.");
+    response.send("Invalid Token.");
   }
 });
 
-app.post('/startAlgo', function(request, response){
-  response.send("You have used the method GET.");
+app.post('/location', function(request, response){
+  if(request && request.query && request.query.indentifier && request.query.gps) {
+    databaseController.submitLocation(request.query.indentifier, request.query.gps, response);
+  } else {
+    response.send("Invalid Params.");
+  }
 });
 
 var server = app.listen(3000, function () {
