@@ -6,18 +6,33 @@ var database = function(dbOptions){
   connection.connect();
 };
 
-database.prototype.sumbitLocation = function(querycallback){
-  var query = 'INSERT INTO userLocations (address, longitude, latitude) VALUES (?, ?, ?);'
 
-  connection.query(query, function(err, rows, fields) {
-  if (!err)
-    console.log('The solution is: ', rows);
-  else
-    console.log('Error while performing Query.');
+database.prototype.queryDatabase = function(sqlQuery, callback){
+  connection.query(sqlQuery, function(error) {
+    if (error) {
+        callback(error)
+    } else {
+        callback("Success")  
+    }
   });
+}
 
-  connection.end();
+database.prototype.sumbitFirstLocation = function(address, longitude, latitude, callback){
+    var sqlQuery = 'INSERT INTO userLocations (address, longitude, latitude) VALUES ( ' + connection.escape(address) + 
+      ',' + connection.escape(longitude) + ', ' + connection.escape(latitude) + ');';
+    
+    this.queryDatabase(sqlQuery, callback);
 
+    connection.end();
+};
+
+database.prototype.updateLocation = function(address, longitude, latitude, callback){
+    var sqlQuery = 'UPDATE userLocations SET longitude=' + connection.escape(longitude) + ', latitude=' + 
+    connection.escape(latitude) + ' WHERE address='+ connection.escape(address)+';';
+    
+    this.queryDatabase(sqlQuery, callback);
+
+    connection.end();
 };
 
 module.exports = database;

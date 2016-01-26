@@ -4,24 +4,39 @@ var app = express()
 var algoController = require('./controllers/algoController');
 var databaseController = require('./controllers/databaseController');
 
+var options = {
+  user: 'hjr7',
+  password: '8dmealw',
+  host: 'dragon.ukc.ac.uk',
+  port: 3306,
+  database: 'hjr7'
+}
 
 app.get('/', function(request, response){
   response.send("LookUp Server.");
 });
 
-app.post('/startAlgo', function(request, response){
-  if(request && request.query && request.query.token) {
-    algoController(request, response);
+app.post('/locationFirst', function(request, response){
+  var callback = function(data){
+    response.send(data);
+  } 
+  if(request && request.query && request.query.address && request.query.longitude && request.query.latitude) {
+    var dbClient = new databaseController(options);
+    dbClient.sumbitFirstLocation(request.query.address, request.query.longitude, request.query.latitude, callback);
   } else {
-    response.send("Invalid Token.");
+    callback("Invalid Params.");
   }
 });
 
-app.post('/location', function(request, response){
-  if(request && request.query && request.query.indentifier && request.query.gps) {
-    databaseController.submitLocation(request.query.indentifier, request.query.gps, response);
+app.post('/locationUpdate', function(request, response){
+  var callback = function(data){
+    response.send(data);
+  }
+  if(request && request.query && request.query.address && request.query.longitude && request.query.latitude) {
+    var dbClient = new databaseController(options);
+    dbClient.updateLocation(request.query.address, request.query.longitude, request.query.latitude, callback);
   } else {
-    response.send("Invalid Params.");
+    callback("Invalid Params.");
   }
 });
 
