@@ -38,15 +38,36 @@ database.prototype.updateLocation = function(address, longitude, latitude, callb
 database.prototype.setOptions = function(query, callback){
   var columnNames = "";
   var values = ""
+
   Object.keys(query).forEach(function(element){
     columnNames = columnNames + element + ",";
-    values = values + query[element] + ",";
+    values = values + connection.escape(query[element]) + ",";
   });
 
   columnNames = columnNames.substring(0, columnNames.length-1);
   values = values.substring(0, values.length-1);
 
   var sqlQuery = "INSERT INTO userData (" + columnNames + ") VALUES (" + values + ");";
+  this.queryDatabase(sqlQuery, callback);
+
+  connection.end();
+};
+
+database.prototype.updateOptions = function(query, callback){
+  var updateString = "";
+  var whereString = "";
+  
+  Object.keys(query).forEach(function(element){
+    if(element != "address"){
+      updateString = updateString + element + "=" + query[element] + ",";
+    } else {
+      whereString = element + "=" + query[element];
+    }
+  });
+  updateString = updateString.substring(0, updateString.length-1);
+
+  var sqlQuery = "UPDATE userData SET " + updateString + " WHERE " + whereString + ";";
+  console.log(sqlQuery);
   
   this.queryDatabase(sqlQuery, callback);
 
