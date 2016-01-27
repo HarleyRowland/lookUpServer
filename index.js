@@ -16,13 +16,13 @@ app.get('/', function(request, response){
   response.send("LookUp Server.");
 });
 
-app.post('/locationFirst', function(request, response){
+app.post('/newUser', function(request, response){
   var callback = function(data){
     response.send(data);
   } 
   if(request && request.query && request.query.address && request.query.longitude && request.query.latitude) {
     var dbClient = new databaseController(options);
-    dbClient.sumbitFirstLocation(request.query.address, request.query.longitude, request.query.latitude, callback);
+    dbClient.newUser(request.query, callback);
   } else {
     callback("Invalid Params.");
   }
@@ -38,19 +38,6 @@ app.post('/locationUpdate', function(request, response){
   } else {
     callback("Invalid Params.");
   }
-});
-
-app.post('/optionsFirst', function(request, response){
-  var callback = function(data){
-    response.send(data);
-  }
-  if(request && request.query && request.query.address) {
-    var dbClient = new databaseController(options);
-    dbClient.setOptions(request.query, callback);
-  } else {
-    callback("Invalid Params.");
-  }
-
 });
 
 app.post('/optionsUpdate', function(request, response){
