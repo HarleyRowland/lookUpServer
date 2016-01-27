@@ -17,12 +17,13 @@ app.get('/', function(request, response){
 });
 
 app.post('/newUser', function(request, response){
+  console.log(request.query);
   var callback = function(data){
     response.send(data);
   } 
-  if(request && request.query && request.query.address && request.query.longitude && request.query.latitude) {
+  if(request && request.query && request.query.userID && request.query.longitude && request.query.latitude) {
     var dbClient = new databaseController(options);
-    dbClient.newUser(request.query, callback);
+    dbClient.inputUser(request.query, callback);
   } else {
     callback("Invalid Params.");
   }
@@ -32,9 +33,9 @@ app.post('/locationUpdate', function(request, response){
   var callback = function(data){
     response.send(data);
   }
-  if(request && request.query && request.query.address && request.query.longitude && request.query.latitude) {
+  if(request && request.query && request.query.userID && request.query.longitude && request.query.latitude) {
     var dbClient = new databaseController(options);
-    dbClient.updateLocation(request.query.address, request.query.longitude, request.query.latitude, callback);
+    dbClient.updateLocation(request.query.userID, request.query.longitude, request.query.latitude, callback);
   } else {
     callback("Invalid Params.");
   }
@@ -44,7 +45,7 @@ app.post('/optionsUpdate', function(request, response){
   var callback = function(data){
     response.send(data);
   }
-  if(request && request.query && request.query.address) {
+  if(request && request.query && request.query.userID) {
     var dbClient = new databaseController(options);
     dbClient.updateOptions(request.query, callback);
   } else {

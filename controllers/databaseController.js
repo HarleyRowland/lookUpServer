@@ -14,19 +14,23 @@ database.prototype.queryDatabase = function(sqlQuery, callback){
     if (error) {
         callback(error)
     } else {
-        callback(null)  
+        callback("Success");  
     }
   });
 }
 
-database.prototype.newUser = function(query, callback){
+database.prototype.inputUser = function(query, callback){
+  console.log("HELLOOOO");
   var self = this;
   async.parallel([
+    function(callback){
+      self.newUser(query, callback);
+    },
     function(callback){
       self.sumbitFirstLocation(query, callback);
     },
     function(callback){
-      self.setOptions(query, callback);
+      self.setSettings(query, callback);
     }
   ],
   function(err, results){
@@ -39,14 +43,22 @@ database.prototype.newUser = function(query, callback){
   });
 }
 
-database.prototype.sumbitFirstLocation = function(query, callback){
-    var sqlQuery = 'INSERT INTO userLocations (address, longitude, latitude) VALUES ( ' + connection.escape(query.address) + 
-      ',' + connection.escape(query.longitude) + ', ' + connection.escape(query.latitude) + ');';
+database.prototype.newUser = function(query, callback){
+    console.log(query);
+
+    var sqlQuery = 'INSERT INTO user (userID) VALUES ( ' + connection.escape(query.userID) + ');';
     
     this.queryDatabase(sqlQuery, callback);
 };
 
-database.prototype.setOptions = function(query, callback){
+database.prototype.sumbitFirstLocation = function(query, callback){
+    var sqlQuery = 'INSERT INTO userLocation (userID, longitude, latitude, timestamp) VALUES ( ' + connection.escape(query.userID) + 
+      ',' + connection.escape(query.longitude) + ', ' + connection.escape(query.latitude) + ', NOW());';
+    
+    this.queryDatabase(sqlQuery, callback);
+};
+
+database.prototype.setSettings = function(query, callback){
   var columnNames = "";
   var values = ""
 
@@ -60,14 +72,14 @@ database.prototype.setOptions = function(query, callback){
   columnNames = columnNames.substring(0, columnNames.length-1);
   values = values.substring(0, values.length-1);
 
-  var sqlQuery = "INSERT INTO userData (" + columnNames + ") VALUES (" + values + ");";
-  console.log(sqlQuery);
+  var sqlQuery = "INSERT INTO userSettings (" + columnNames + ") VALUES (" + values + ");";
+
   this.queryDatabase(sqlQuery, callback);
 };
 
-database.prototype.updateLocation = function(address, longitude, latitude, callback){
-    var sqlQuery = 'UPDATE userLocations SET longitude=' + connection.escape(longitude) + ', latitude=' + 
-    connection.escape(latitude) + ' WHERE address='+ connection.escape(address)+';';
+database.prototype.updateLocation = function(userID, longitude, latitude, callback){
+    var sqlQuery = "UPDATE userLocation SET longitude=" + connection.escape(longitude) + ", latitude=" + 
+    connection.escape(latitude) + ", timestamp=NOW() WHERE userID="+ connection.escape(userID)+";";
     
     this.queryDatabase(sqlQuery, callback);
 
@@ -80,9 +92,9 @@ database.prototype.updateOptions = function(query, callback){
   var whereString = "";
   
   Object.keys(query).forEach(function(element){
-    if(element != "address" && element != 'latitude' && element != longitude){
+    if(element != "userID" && element != 'latitude' && element != longitude){
       updateString = updateString + element + "=" + query[element] + ",";
-    } else if(element == "address") {
+    } else if(element == "userID") {
       whereString = element + "=" + query[element];
     }
   });
