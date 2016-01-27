@@ -40,6 +40,31 @@ app.post('/locationUpdate', function(request, response){
   }
 });
 
+app.post('/optionsFirst', function(request, response){
+  var callback = function(data){
+    response.send(data);
+  }
+  if(request && request.query && request.query.address) {
+    var dbClient = new databaseController(options);
+    dbClient.setOptions(request.query, callback);
+  } else {
+    callback("Invalid Params.");
+  }
+
+});
+
+app.post('/optionsUpdate', function(request, response){
+  var callback = function(data){
+    response.send(data);
+  }
+  if(request && request.query && request.query.address) {
+    var dbClient = new databaseController(options);
+    dbClient.updateOptions(request.query, callback);
+  } else {
+    callback("Invalid Params.");
+  }
+});
+
 var server = app.listen(3000, function () {
 
   var host = server.address().address
