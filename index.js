@@ -3,6 +3,10 @@ var app = express()
 
 var algoController = require('./controllers/algoController');
 var databaseController = require('./controllers/databaseController');
+var twilioController = require('./controllers/twilioController');
+
+var accountSid = 'AC010616120338b899ea6b79a04b17c9d7';
+var authToken = '05bd4bc2d31cf39d93810b2770dce59e'; 
 
 var options = {
   user: 'hjr7',
@@ -16,11 +20,22 @@ app.get('/', function(request, response){
   response.send("LookUp Server.");
 });
 
-app.post('/newUser', function(request, response){
-  console.log(request.query);
+app.get('/testTwilio', function(request, response){
   var callback = function(data){
     response.send(data);
-  } 
+  }
+  if(request && request.query && request.query.sendNumber){
+    var twilio = new twilioController(accountSid, authToken);
+    twilio.sendMessage(request.query, callback);
+  } else {
+    callback("Invalid Params.");
+  }
+});
+
+app.post('/newUser', function(request, response){
+  var callback = function(data){
+    response.send(data);
+  }
   if(request && request.query && request.query.userID && request.query.longitude && request.query.latitude) {
     var dbClient = new databaseController(options);
     dbClient.inputUser(request.query, callback);

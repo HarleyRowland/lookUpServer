@@ -20,7 +20,6 @@ database.prototype.queryDatabase = function(sqlQuery, callback){
 }
 
 database.prototype.inputUser = function(query, callback){
-  console.log("HELLOOOO");
   var self = this;
   async.parallel([
     function(callback){
@@ -44,11 +43,9 @@ database.prototype.inputUser = function(query, callback){
 }
 
 database.prototype.newUser = function(query, callback){
-    console.log(query);
-
-    var sqlQuery = 'INSERT INTO user (userID) VALUES ( ' + connection.escape(query.userID) + ');';
+  var sqlQuery = 'INSERT INTO user (userID) VALUES ( ' + connection.escape(query.userID) + ');';
     
-    this.queryDatabase(sqlQuery, callback);
+  this.queryDatabase(sqlQuery, callback);
 };
 
 database.prototype.sumbitFirstLocation = function(query, callback){
