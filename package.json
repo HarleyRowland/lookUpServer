@@ -1,0 +1,26 @@
+{
+  "name": "lookupserver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "async": "^1.5.2",
+    "express": "^4.13.4",
+    "mysql": "^2.10.2",
+    "twilio": "^2.9.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HarleyRowland/lookUpServer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HarleyRowland/lookUpServer/issues"
+  },
+  "homepage": "https://github.com/HarleyRowland/lookUpServer#readme"
+}
