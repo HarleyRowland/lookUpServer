@@ -20,7 +20,7 @@ app.get('/', function(request, response){
   response.send("LookUp Server.");
 });
 
-app.get('/testTwilio', function(request, response){
+app.get('/sendSMS', function(request, response){
   var callback = function(data){
     response.send(data);
   }

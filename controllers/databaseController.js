@@ -14,7 +14,7 @@ database.prototype.queryDatabase = function(sqlQuery, callback){
     if (error) {
         callback(error)
     } else {
-        callback("Success");  
+        callback();  
     }
   });
 }
@@ -36,9 +36,9 @@ database.prototype.inputUser = function(query, callback){
     if(err){
       callback(err)
     } else {
-      callback("Success");
-      connection.end();
+      callback(true);
     }
+    connection.end(); 
   });
 }
 
@@ -78,7 +78,13 @@ database.prototype.updateLocation = function(userID, longitude, latitude, callba
     var sqlQuery = "UPDATE userLocation SET longitude=" + connection.escape(longitude) + ", latitude=" + 
     connection.escape(latitude) + ", timestamp=NOW() WHERE userID="+ connection.escape(userID)+";";
     
-    this.queryDatabase(sqlQuery, callback);
+    this.queryDatabase(sqlQuery, function(err){
+      if(err){
+        callback(err);
+      } else {
+        callback(true);
+      }
+    });
 
     connection.end();
 };
@@ -89,7 +95,7 @@ database.prototype.updateOptions = function(query, callback){
   var whereString = "";
   
   Object.keys(query).forEach(function(element){
-    if(element != "userID" && element != 'latitude' && element != longitude){
+    if(element != "userID" && element != 'latitude' && element != 'longitude'){
       updateString = updateString + element + "=" + query[element] + ",";
     } else if(element == "userID") {
       whereString = element + "=" + query[element];
@@ -97,9 +103,15 @@ database.prototype.updateOptions = function(query, callback){
   });
   updateString = updateString.substring(0, updateString.length-1);
 
-  var sqlQuery = "UPDATE userData SET " + updateString + " WHERE " + whereString + ";";
+  var sqlQuery = "UPDATE userSettings SET " + updateString + " WHERE " + whereString + ";";
   
-  this.queryDatabase(sqlQuery, callback);
+  this.queryDatabase(sqlQuery, function(err){
+      if(err){
+        callback(err);
+      } else {
+        callback(true);
+      }
+    });
 
   connection.end();
 };

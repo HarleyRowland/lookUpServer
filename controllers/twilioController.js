@@ -11,7 +11,6 @@ twilio.prototype.sendMessage = function(query, callback){
     body: "LOOK UP friend :D!",   
   }, function(err, message) { 
     if(err){
-      console.log(err); 
       callback(err);
     } else {
       callback("Success");
