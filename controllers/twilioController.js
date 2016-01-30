@@ -1,10 +1,14 @@
 var client = null;
 
-var twilio = function(sid, token){
+function(sid, token){
   client = require('twilio')(sid, token); 
 };
 
 twilio.prototype.sendMessage = function(query, callback){
+  if(!callback) return;
+  if(!query) return callback("No query data passed to sendMessage function.");
+  if(!query.sendNumber) return callback("No number to send to passed to sendMessage function.");
+
   client.messages.create({ 
     to: query.sendNumber, 
     from: "+447481345332", 
@@ -13,7 +17,7 @@ twilio.prototype.sendMessage = function(query, callback){
     if(err){
       callback(err);
     } else {
-      callback("Success");
+      callback(true);
     }
   });
 }
