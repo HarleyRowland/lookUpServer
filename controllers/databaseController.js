@@ -10,7 +10,8 @@ var database = function(dbOptions){
 
 database.prototype.queryDatabase = function(sqlQuery, callback){
   if(!callback) return;
-  if(!sqlQuery) return callback("No sqlQuery passed to queryData function.");
+  if(!sqlQuery) return callback("No sqlQuery passed to queryDatabase function.");
+
   connection.query(sqlQuery, function(error) {
     if (error) {
       callback(error)
@@ -81,11 +82,7 @@ database.prototype.setSettings = function(query, callback){
   Object.keys(query).forEach(function(element){
     if(element != 'latitude' && element != 'longitude'){
       columnNames = columnNames + element + ",";
-      if(query[element] == NaN){
-        values = values + connection.escape(query[element]) + ",";
-      } else {
-        values = values + query[element] + ",";
-      }
+      values = values + connection.escape(query[element]) + ",";
     }
   });
 
@@ -93,7 +90,6 @@ database.prototype.setSettings = function(query, callback){
   values = values.substring(0, values.length-1);
 
   var sqlQuery = "INSERT INTO userSettings (" + columnNames + ") VALUES (" + values + ");";
-
   this.queryDatabase(sqlQuery, callback);
 };
 
@@ -144,7 +140,6 @@ database.prototype.updateOptions = function(query, callback){
   var sqlQuery = "UPDATE userSettings SET " + updateString + " WHERE " + whereString + ";";
 
   this.queryDatabase(sqlQuery, function(err){
-    console.log("in db");
       if(err){
         callback(err);
       } else {

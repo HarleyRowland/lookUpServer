@@ -23,7 +23,9 @@ var connection = {
 var data = {
   userID: "+447535620820",
   longitude: "30.123400",
-  latitude: "71.928390"
+  latitude: "71.928390",
+  play: 1,
+  myString: "stringyString"
 }
 
 describe('Unit Tests - Database Controller', function(){
@@ -56,7 +58,7 @@ describe('Unit Tests - Database Controller', function(){
 
     it('should call an error if it isnt passed an SQL query', function(){
       dbClient.queryDatabase(null, callback);
-      assert.ok(callback.calledWith("No sqlQuery passed to queryData function."));
+      assert.ok(callback.calledWith("No sqlQuery passed to queryDatabase function."));
     });
       
     it('should call connection.query', function(){
@@ -314,7 +316,7 @@ describe('Unit Tests - Database Controller', function(){
 
     it('should call connection.escape', function(){
       dbClient.setSettings(data, callback);
-      assert.ok(connection.escape.calledOnce);
+      assert.ok(connection.escape.calledThrice);
     });
 
     it('should call queryDatabase', function(){
@@ -324,7 +326,7 @@ describe('Unit Tests - Database Controller', function(){
 
     it('should call queryDatabase with the correct string', function(){
       dbClient.setSettings(data, callback);
-      assert.ok(dbClient.queryDatabase.calledWith("INSERT INTO userSettings (userID) VALUES (+447535620820);"));
+      assert.ok(dbClient.queryDatabase.calledWith("INSERT INTO userSettings (userID,play,myString) VALUES (+447535620820,1,stringyString);"));
     });
 
   });
@@ -446,7 +448,7 @@ describe('Unit Tests - Database Controller', function(){
 
     it('should call queryDatabase with the correct string', function(){
       dbClient.updateOptions(data, callback);
-      assert.ok(dbClient.queryDatabase.calledWith("UPDATE userSettings SET  WHERE userID=+447535620820;"));
+      assert.ok(dbClient.queryDatabase.calledWith("UPDATE userSettings SET play=1,myString=stringyString WHERE userID=+447535620820;"));
     });
     
   });
