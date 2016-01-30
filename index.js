@@ -50,7 +50,7 @@ app.post('/locationUpdate', function(request, response){
   }
   if(request && request.query && request.query.userID && request.query.longitude && request.query.latitude) {
     var dbClient = new databaseController(options);
-    dbClient.updateLocation(request.query.userID, request.query.longitude, request.query.latitude, callback);
+    dbClient.updateLocation(request.query, callback);
   } else {
     callback("Invalid Params.");
   }
