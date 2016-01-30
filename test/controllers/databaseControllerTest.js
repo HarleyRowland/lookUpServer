@@ -246,7 +246,7 @@ describe('Unit Tests - Database Controller', function(){
         userID: "+447535620820",
         latitude: "78.201"
       }, callback);
-      assert.ok(callback.calledWith("No userID passed to sumbitFirstLocation function."));
+      assert.ok(callback.calledWith("No longitude passed to sumbitFirstLocation function."));
     });
 
     it('should callback an error if it isnt passed latitude', function(){
@@ -254,7 +254,7 @@ describe('Unit Tests - Database Controller', function(){
         userID: "+447535620820",
         longitude: "40.401",
       }, callback);
-      assert.ok(callback.calledWith("No userID passed to sumbitFirstLocation function."));
+      assert.ok(callback.calledWith("No latitude passed to sumbitFirstLocation function."));
     });
 
     it('should call connection.escape three times', function(){
@@ -305,7 +305,7 @@ describe('Unit Tests - Database Controller', function(){
       assert.ok(callback.calledWith("No userID passed to setSettings function."));
     });
 
-    it('should callback an error if it passed any settings', function(){
+    it('should callback an error if isnt passed any settings', function(){
       dbClient.setSettings({
         userID: "+447535620820"
       }, callback);
@@ -344,18 +344,52 @@ describe('Unit Tests - Database Controller', function(){
       callback = null;
     });
 
+    it('should not call dbClient.queryDatabase if no callback passed', function(){
+      dbClient.updateLocation("SELECT * FROM user");
+      assert.ok(dbClient.queryDatabase.notCalled);
+    });
+    
+    it('should callback an error if it isnt passed a query string', function(){
+      dbClient.updateLocation(null, callback);
+      assert.ok(callback.calledWith("No query data passed to updateLocation function."));
+    });
+
+    it('should callback an error if it isnt passed a userID', function(){
+      dbClient.updateLocation({
+        longitude: "40.401",
+        latitude: "78.201"
+      }, callback);
+      assert.ok(callback.calledWith("No userID passed to updateLocation function."));
+    });
+
+    it('should callback an error if it isnt passed longitude', function(){
+      dbClient.updateLocation({
+        userID: "+447535620820",
+        latitude: "78.201"
+      }, callback);
+      assert.ok(callback.calledWith("No longitude passed to updateLocation function."));
+    });
+
+    it('should callback an error if it isnt passed latitude', function(){
+      dbClient.updateLocation({
+        userID: "+447535620820",
+        longitude: "40.401",
+      }, callback);
+      assert.ok(callback.calledWith("No latitude passed to updateLocation function."));
+    });
+
     it('should call connection.escape three times', function(){
-      dbClient.updateLocation(data);
+      dbClient.updateLocation(data, callback);
       assert.ok(connection.escape.calledThrice);
     });
 
     it('should call queryDatabase', function(){
-      dbClient.updateLocation(data);
+      dbClient.updateLocation(data, callback);
       assert.ok(dbClient.queryDatabase.called);
     });
 
     it('should call queryDatabase with the correct string', function(){
-      dbClient.updateLocation(data);
+      dbClient.updateLocation(data, callback);
       assert.ok(dbClient.queryDatabase.calledWith("UPDATE userLocation SET longitude=30.123400, latitude=71.928390, timestamp=NOW() WHERE userID=+447535620820;"));
     });
     
@@ -376,18 +410,42 @@ describe('Unit Tests - Database Controller', function(){
       callback = null;
     });
 
+    it('should not call dbClient.queryDatabase if no callback passed', function(){
+      dbClient.updateOptions("SELECT * FROM user");
+      assert.ok(dbClient.queryDatabase.notCalled);
+    });
+    
+    it('should callback an error if it isnt passed a query string', function(){
+      dbClient.updateOptions(null, callback);
+      assert.ok(callback.calledWith("No query data passed to updateOptions function."));
+    });
+
+    it('should callback an error if it isnt passed a userID', function(){
+      dbClient.updateOptions({
+        play: 1
+      }, callback);
+      assert.ok(callback.calledWith("No userID passed to updateOptions function."));
+    });
+
+    it('should callback an error if isnt passed any settings', function(){
+      dbClient.updateOptions({
+        userID: "+447535620820"
+      }, callback);
+      assert.ok(callback.calledWith("No settings passed to updateOptions function."));
+    });
+
     it('should call connection.escape', function(){
-      dbClient.updateOptions(data);
+      dbClient.updateOptions(data, callback);
       assert.ok(connection.escape.called);
     });
 
     it('should call queryDatabase', function(){
-      dbClient.updateOptions(data);
+      dbClient.updateOptions(data, callback);
       assert.ok(dbClient.queryDatabase.called);
     });
 
     it('should call queryDatabase with the correct string', function(){
-      dbClient.updateOptions(data);
+      dbClient.updateOptions(data, callback);
       assert.ok(dbClient.queryDatabase.calledWith("UPDATE userSettings SET  WHERE userID=+447535620820;"));
     });
     

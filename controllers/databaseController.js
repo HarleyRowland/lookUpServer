@@ -60,8 +60,8 @@ database.prototype.sumbitFirstLocation = function(query, callback){
   if(!callback) return;
   if(!query) return callback("No query data passed to sumbitFirstLocation function.");
   if(!query.userID) return callback("No userID passed to sumbitFirstLocation function.");
-  if(!query.longitude) return callback("No userID passed to sumbitFirstLocation function.");
-  if(!query.latitude) return callback("No userID passed to sumbitFirstLocation function.");
+  if(!query.longitude) return callback("No longitude passed to sumbitFirstLocation function.");
+  if(!query.latitude) return callback("No latitude passed to sumbitFirstLocation function.");
 
   var sqlQuery = 'INSERT INTO userLocation (userID, longitude, latitude, timestamp) VALUES (' + connection.escape(query.userID) + 
     ',' + connection.escape(query.longitude) + ', ' + connection.escape(query.latitude) + ', NOW());';
@@ -81,7 +81,11 @@ database.prototype.setSettings = function(query, callback){
   Object.keys(query).forEach(function(element){
     if(element != 'latitude' && element != 'longitude'){
       columnNames = columnNames + element + ",";
-      values = values + connection.escape(query[element]) + ",";
+      if(query[element] == NaN){
+        values = values + connection.escape(query[element]) + ",";
+      } else {
+        values = values + query[element] + ",";
+      }
     }
   });
 
@@ -95,11 +99,11 @@ database.prototype.setSettings = function(query, callback){
 
 database.prototype.updateLocation = function(query, callback){
   if(!callback) return;
-  if(!query) return callback("No query data passed to sumbitFirstLocation function.");
-  if(!query.userID) return callback("No userID passed to sumbitFirstLocation function.");
-  if(!query.longitude) return callback("No userID passed to sumbitFirstLocation function.");
-  if(!query.latitude) return callback("No userID passed to sumbitFirstLocation function.");
-  
+  if(!query) return callback("No query data passed to updateLocation function.");
+  if(!query.userID) return callback("No userID passed to updateLocation function.");
+  if(!query.longitude) return callback("No longitude passed to updateLocation function.");
+  if(!query.latitude) return callback("No latitude passed to updateLocation function.");
+
   var sqlQuery = "UPDATE userLocation SET longitude=" + connection.escape(query.longitude) + ", latitude=" + 
   connection.escape(query.latitude) + ", timestamp=NOW() WHERE userID="+ connection.escape(query.userID)+";";
 
@@ -116,6 +120,11 @@ database.prototype.updateLocation = function(query, callback){
 
 
 database.prototype.updateOptions = function(query, callback){
+  if(!callback) return;
+  if(!query) return callback("No query data passed to updateOptions function.");
+  if(!query.userID) return callback("No userID passed to updateOptions function.");
+  if(Object.keys(query).length < 2) return callback("No settings passed to updateOptions function.");
+
   var updateString = "";
   var whereString = "";
   
