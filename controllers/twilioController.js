@@ -1,6 +1,6 @@
 var client = null;
 
-function(sid, token){
+var twilio = function(sid, token){
   client = require('twilio')(sid, token); 
 };
 

@@ -288,6 +288,7 @@ describe('Unit Tests - Database Controller', function(){
       connection.escape.restore();
       dbClient.queryDatabase.restore();
       callback = null;
+      data.play = 1;
     });
 
     it('should not call dbClient.queryDatabase if no callback passed', function(){
@@ -324,9 +325,46 @@ describe('Unit Tests - Database Controller', function(){
       assert.ok(dbClient.queryDatabase.calledOnce);
     });
 
-    it('should call queryDatabase with the correct string', function(){
+    it('should call queryDatabase with play setting as 1 if no play setting passed in', function(){
+      data.play = null;
       dbClient.setSettings(data, callback);
       assert.ok(dbClient.queryDatabase.calledWith("INSERT INTO userSettings (userID,play,myString) VALUES (+447535620820,1,stringyString);"));
+    });
+
+    it('should call queryDatabase with play setting as 1 if it is set as true', function(){
+      data.play = true;
+      dbClient.setSettings(data, callback);
+      assert.ok(dbClient.queryDatabase.calledWith("INSERT INTO userSettings (userID,play,myString) VALUES (+447535620820,1,stringyString);"));
+    });
+
+    it('should call queryDatabase with play setting as 1 if it is set as true string', function(){
+      data.play = "true";
+      dbClient.setSettings(data, callback);
+      assert.ok(dbClient.queryDatabase.calledWith("INSERT INTO userSettings (userID,play,myString) VALUES (+447535620820,1,stringyString);"));
+    });
+
+    it('should call queryDatabase with play setting as 1 if it is set as 1 string', function(){
+      data.play = "1";
+      dbClient.setSettings(data, callback);
+      assert.ok(dbClient.queryDatabase.calledWith("INSERT INTO userSettings (userID,play,myString) VALUES (+447535620820,1,stringyString);"));
+    });
+
+    it('should call queryDatabase with play setting as 0 if it is set as false', function(){
+      data.play = false;
+      dbClient.setSettings(data, callback);
+      assert.ok(dbClient.queryDatabase.calledWith("INSERT INTO userSettings (userID,play,myString) VALUES (+447535620820,0,stringyString);"));
+    });
+
+    it('should call queryDatabase with play setting as 0 if it is set as false string', function(){
+      data.play = "false";
+      dbClient.setSettings(data, callback);
+      assert.ok(dbClient.queryDatabase.calledWith("INSERT INTO userSettings (userID,play,myString) VALUES (+447535620820,0,stringyString);"));
+    });
+
+    it('should call queryDatabase with play setting as 0 if it is set as 0 string', function(){
+      data.play = "0";
+      dbClient.setSettings(data, callback);
+      assert.ok(dbClient.queryDatabase.calledWith("INSERT INTO userSettings (userID,play,myString) VALUES (+447535620820,0,stringyString);"));
     });
 
   });
@@ -410,6 +448,7 @@ describe('Unit Tests - Database Controller', function(){
       connection.escape.restore();
       dbClient.queryDatabase.restore();
       callback = null;
+      data.play = 1;
     });
 
     it('should not call dbClient.queryDatabase if no callback passed', function(){
@@ -449,6 +488,48 @@ describe('Unit Tests - Database Controller', function(){
     it('should call queryDatabase with the correct string', function(){
       dbClient.updateOptions(data, callback);
       assert.ok(dbClient.queryDatabase.calledWith("UPDATE userSettings SET play=1,myString=stringyString WHERE userID=+447535620820;"));
+    });
+
+    it('should call queryDatabase with play setting as 1 if no play setting passed in', function(){
+      data.play = null;
+      dbClient.updateOptions(data, callback);
+      assert.ok(dbClient.queryDatabase.calledWith("UPDATE userSettings SET play=1,myString=stringyString WHERE userID=+447535620820;"));
+    });
+
+    it('should call queryDatabase with play setting as 1 if play set as true', function(){
+      data.play = true;
+      dbClient.updateOptions(data, callback);
+      assert.ok(dbClient.queryDatabase.calledWith("UPDATE userSettings SET play=1,myString=stringyString WHERE userID=+447535620820;"));
+    });
+
+    it('should call queryDatabase with play setting as 1 if play set as true string', function(){
+      data.play = "true";
+      dbClient.updateOptions(data, callback);
+      assert.ok(dbClient.queryDatabase.calledWith("UPDATE userSettings SET play=1,myString=stringyString WHERE userID=+447535620820;"));
+    });
+
+    it('should call queryDatabase with play setting as 1 if play set as 1 string', function(){
+      data.play = "1";
+      dbClient.updateOptions(data, callback);
+      assert.ok(dbClient.queryDatabase.calledWith("UPDATE userSettings SET play=1,myString=stringyString WHERE userID=+447535620820;"));
+    });
+
+    it('should call queryDatabase with play setting as 0 if play set as false', function(){
+      data.play = false;
+      dbClient.updateOptions(data, callback);
+      assert.ok(dbClient.queryDatabase.calledWith("UPDATE userSettings SET play=0,myString=stringyString WHERE userID=+447535620820;"));
+    });
+
+    it('should call queryDatabase with play setting as 0 if play set as false string', function(){
+      data.play = "false";
+      dbClient.updateOptions(data, callback);
+      assert.ok(dbClient.queryDatabase.calledWith("UPDATE userSettings SET play=0,myString=stringyString WHERE userID=+447535620820;"));
+    });
+
+    it('should call queryDatabase with play setting as 0 if play set as 0 string', function(){
+      data.play = "0";
+      dbClient.updateOptions(data, callback);
+      assert.ok(dbClient.queryDatabase.calledWith("UPDATE userSettings SET play=0,myString=stringyString WHERE userID=+447535620820;"));
     });
     
   });

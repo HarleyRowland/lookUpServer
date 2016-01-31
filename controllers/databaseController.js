@@ -76,8 +76,13 @@ database.prototype.setSettings = function(query, callback){
   if(!query.userID) return callback("No userID passed to setSettings function.");
   if(Object.keys(query).length < 2) return callback("No settings passed to setSettings function.");
 
+  if(query.play == null || query.play == undefined || query.play == true || query.play == "true" || query.play == "1") query.play = 1;
+  if(query.play != null || query.play != undefined){
+    if(query.play == false || query.play == "false" || query.play == "0") query.play = 0;
+  }
+
   var columnNames = "";
-  var values = ""
+  var values = "";
 
   Object.keys(query).forEach(function(element){
     if(element != 'latitude' && element != 'longitude'){
@@ -88,8 +93,8 @@ database.prototype.setSettings = function(query, callback){
 
   columnNames = columnNames.substring(0, columnNames.length-1);
   values = values.substring(0, values.length-1);
-
   var sqlQuery = "INSERT INTO userSettings (" + columnNames + ") VALUES (" + values + ");";
+
   this.queryDatabase(sqlQuery, callback);
 };
 
@@ -121,13 +126,18 @@ database.prototype.updateOptions = function(query, callback){
   if(!query.userID) return callback("No userID passed to updateOptions function.");
   if(Object.keys(query).length < 2) return callback("No settings passed to updateOptions function.");
 
+  if(query.play == null || query.play == undefined || query.play == true || query.play == "true" || query.play == "1") query.play = 1;
+  if(query.play != null && query.play != undefined){
+    if(query.play == false || query.play == "false" || query.play == "0") query.play = 0;
+  }
+
   var updateString = "";
   var whereString = "";
   
   Object.keys(query).forEach(function(element){
     if(element != "userID" && element != 'latitude' && element != 'longitude'){
-      if(query[element] == NaN){
-        updateString = updateString + element + "=" + conection.escape(query[element]) + ",";
+      if(isNaN(query[element])){
+        updateString = updateString + element + "=" + connection.escape(query[element]) + ",";
       } else {
         updateString = updateString + element + "=" + query[element] + ",";
       }
@@ -140,13 +150,13 @@ database.prototype.updateOptions = function(query, callback){
   var sqlQuery = "UPDATE userSettings SET " + updateString + " WHERE " + whereString + ";";
 
   this.queryDatabase(sqlQuery, function(err){
-      if(err){
-        callback(err);
-      } else {
-        callback(true);
-      }
-      connection.end();
-    });
+    if(err){
+      callback(err);
+    } else {
+      callback(true);
+    }
+    connection.end();
+  });
 
 };
 
