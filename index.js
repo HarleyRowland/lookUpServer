@@ -24,9 +24,9 @@ app.get('/sendSMS', function(request, response){
   var callback = function(data){
     response.send(data);
   }
-  if(request && request.query && request.query.sendNumber){
+  if(request && request.query && request.query.userID){
     var twilio = new twilioController(accountSid, authToken);
-    twilio.sendMessage(request.query, callback);
+    twilio.sendLookUpMessage(request.query, callback);
   } else {
     callback("Invalid Params.");
   }
@@ -36,7 +36,7 @@ app.post('/newUser', function(request, response){
   var callback = function(data){
     response.send(data);
   }
-  if(request && request.query && request.query.userID && request.query.longitude && request.query.latitude) {
+  if(request && request.query && request.query.userID && request.query.longitude && request.query.latitude && request.query.password) {
     var dbClient = new databaseController(options);
     dbClient.inputUser(request.query, callback);
   } else {
@@ -63,6 +63,30 @@ app.post('/optionsUpdate', function(request, response){
   if(request && request.query && request.query.userID) {
     var dbClient = new databaseController(options);
     dbClient.updateOptions(request.query, callback);
+  } else {
+    callback("Invalid Params.");
+  }
+});
+
+app.post('/numberStatus', function(request, response){
+  var callback = function(data){
+    response.send(data);
+  }
+  if(request && request.query && request.query.userID) {
+    var dbClient = new databaseController(options);
+    dbClient.numberStatus(request.query, callback);
+  } else {
+    callback("Invalid Params.");
+  }
+});
+
+app.post('/authenticatePhoneNumber', function(request, response){
+  var callback = function(data){
+    response.send(data);
+  }
+  if(request && request.query && request.query.userID && request.query.authenticationCode) {
+    var dbClient = new databaseController(options);
+    dbClient.authenticatePhoneNumber(request.query, callback);
   } else {
     callback("Invalid Params.");
   }
