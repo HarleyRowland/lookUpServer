@@ -78,11 +78,11 @@ describe('Unit Tests - Database Controller', function(){
       callback = null;
     });
 
-    it('should not call async.parallel if no callback passed', function(){
-      sinon.stub(async, 'parallel');
+    it('should not call async.series if no callback passed', function(){
+      sinon.stub(async, 'series');
       dbClient.inputUser("SELECT * FROM user");
-      assert.ok(async.parallel.notCalled);
-      async.parallel.restore();
+      assert.ok(async.series.notCalled);
+      async.series.restore();
     });
     
     it('should call an error if it isnt passed a query string', function(){
@@ -90,11 +90,11 @@ describe('Unit Tests - Database Controller', function(){
       assert.ok(callback.calledWith("No query data passed to inputUser function."));
     });
 
-    it('should call async.parallel', function(){
-      sinon.stub(async, 'parallel');
+    it('should call async.series', function(){
+      sinon.stub(async, 'series');
       dbClient.inputUser(data, callback);
-      assert.ok(async.parallel.calledOnce);
-      async.parallel.restore();
+      assert.ok(async.series.calledOnce);
+      async.series.restore();
     });
 
     it('should call newUser', function(){
@@ -108,57 +108,35 @@ describe('Unit Tests - Database Controller', function(){
       dbClient.setSettings.restore();
     });
 
-    it('should call sumbitFirstLocation', function(){
-      sinon.stub(dbClient, 'newUser');
-      sinon.stub(dbClient, 'sumbitFirstLocation');
-      sinon.stub(dbClient, 'setSettings');
-      dbClient.inputUser(data, callback);
-      assert.ok(dbClient.sumbitFirstLocation.calledOnce);
-      dbClient.newUser.restore();
-      dbClient.sumbitFirstLocation.restore();
-      dbClient.setSettings.restore();
-    });
-
-    it('should call setSettings', function(){
-      sinon.stub(dbClient, 'newUser');
-      sinon.stub(dbClient, 'sumbitFirstLocation');
-      sinon.stub(dbClient, 'setSettings');
-      dbClient.inputUser(data, callback);
-      assert.ok(dbClient.setSettings.calledOnce);
-      dbClient.newUser.restore();
-      dbClient.sumbitFirstLocation.restore();
-      dbClient.setSettings.restore();
-    });
-
     it('should callback an error if either newUser, sumbitFirstLocation or setSettings fail', function(){
-      sinon.stub(async, 'parallel').callsArgWith(1, "An Error");
+      sinon.stub(async, 'series').callsArgWith(1, "An Error");
       dbClient.inputUser(data, callback);
       assert.ok(callback.calledWith("An Error"));
-      async.parallel.restore();
+      async.series.restore();
     });
 
-    it('should callback true if all methods in async parallel are successful', function(){
-      sinon.stub(async, 'parallel').callsArgWith(1, null, true);
+    it('should callback true if all methods in async series are successful', function(){
+      sinon.stub(async, 'series').callsArgWith(1, null, true);
       dbClient.inputUser(data, callback);
       assert.ok(callback.calledWith(true));
-      async.parallel.restore();
+      async.series.restore();
     });
 
-    it('should call connection.end if any of the async parallel methods return an error', function(){
-      sinon.stub(async, 'parallel').callsArgWith(1, "An Error");
+    it('should call connection.end if any of the async series methods return an error', function(){
+      sinon.stub(async, 'series').callsArgWith(1, "An Error");
       sinon.stub(connection, 'end');
       dbClient.inputUser(data, callback);
       assert.ok(connection.end.calledOnce);
-      async.parallel.restore();
+      async.series.restore();
       connection.end.restore();
     });
 
-    it('should call connection.end if async parallel methods are successful', function(){
-      sinon.stub(async, 'parallel').callsArgWith(1, null, true);
+    it('should call connection.end if async series methods are successful', function(){
+      sinon.stub(async, 'series').callsArgWith(1, null, true);
       sinon.stub(connection, 'end');
       dbClient.inputUser(data, callback);
       assert.ok(connection.end.calledOnce);
-      async.parallel.restore();
+      async.series.restore();
       connection.end.restore();
     });
     

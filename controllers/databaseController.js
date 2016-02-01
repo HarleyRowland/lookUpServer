@@ -26,7 +26,7 @@ database.prototype.inputUser = function(query, callback){
   if(!query) return callback("No query data passed to inputUser function.");
 
   var self = this;
-  async.parallel([
+  async.series([
     function(callback){
       self.newUser(query, callback);
     },

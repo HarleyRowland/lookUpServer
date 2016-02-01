@@ -1,5 +1,5 @@
 /*Backend bootstrap SQL*/
-DROP TABLE IF EXISTS userAuthentication, userLocation, userSettings, user;
+DROP TABLE IF EXISTS userAuthentication, userLocation, userSettings, user, transactionHistory;
 
 /*Create table statements*/
 CREATE TABLE user(
